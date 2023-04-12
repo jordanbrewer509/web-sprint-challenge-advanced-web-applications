@@ -19,7 +19,7 @@ export default function App() {
   const [spinnerOn, setSpinnerOn] = useState(false)
 
   // ✨ Research `useNavigate` in React Router v.6
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const redirectToLogin = () => {navigate('/')}
   const redirectToArticles = () => {navigate('/articles')}
 
@@ -30,9 +30,9 @@ export default function App() {
     // In any case, we should redirect the browser back to the login screen,
     // using the helper above.
     if(localStorage.getItem("token")) { 
-      setMessage("Goodbye!")
-      localStorage.clear()
-      redirectToLogin()
+      setMessage("Goodbye!");
+      localStorage.clear();
+      redirectToLogin();
     }
   }
 
@@ -43,18 +43,18 @@ export default function App() {
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
-    setSpinnerOn(true)
-    setMessage('')
+    setSpinnerOn(true);
+    setMessage('');
     const credentials = {username: username, password: password}
-    axios.post(`http://localhost:9000/api/login`, credentials)
+    axios.post(loginUrl, credentials)
       .then(res => {
-        setMessage(res.data.message)
-        localStorage.setItem("token", res.data.token)
-        setSpinnerOn(false)
-        redirectToArticles()
+        setMessage(res.data.message);
+        localStorage.setItem("token", res.data.token);
+        setSpinnerOn(false);
+        redirectToArticles();
       })
       .catch(err => {
-        console.log(err)
+        console.log(err);
       })
   }
 
@@ -67,6 +67,21 @@ export default function App() {
     // If something goes wrong, check the status of the response:
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
+    setMessage('');
+    setSpinnerOn(true);
+    const token = localStorage.getItem("token");
+    axios.get(articlesUrl, { headers: { authorization: token }
+    })
+      .then(res => {
+        setSpinnerOn(false)
+        setArticles(res.data.articles)
+        setMessage(res.data.message)
+      })
+      .catch(err => {
+        setSpinnerOn(false)
+        console.log(err)
+        redirectToLogin()
+      })
   }
 
   const postArticle = article => {
@@ -88,7 +103,7 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner />
+      <Spinner on={spinnerOn}/>
       <Message message={message}/>
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
@@ -102,7 +117,7 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm />
-              <Articles />
+              <Articles getArticles={getArticles} articles={articles} />
             </>
           } />
         </Routes>
