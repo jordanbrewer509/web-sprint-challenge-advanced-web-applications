@@ -112,10 +112,13 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    console.log(article_id)
+    console.log(article)
   }
 
   const deleteArticle = article_id => {
     // ✨ implement
+    console.log(article_id)
   }
 
   return (
@@ -135,7 +138,12 @@ export default function App() {
           <Route path="articles" element={
             <>
               <ArticleForm postArticle={postArticle}/>
-              <Articles getArticles={getArticles} articles={articles} />
+              <Articles 
+                articles={articles} 
+                getArticles={getArticles} 
+                updateArticle={updateArticle} 
+                deleteArticle={deleteArticle}
+              />
             </>
           } />
         </Routes>
