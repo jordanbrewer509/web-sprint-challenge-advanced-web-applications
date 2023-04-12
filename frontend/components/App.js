@@ -7,6 +7,7 @@ import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
 
 import axios from 'axios'
+import { axiosWithAuth } from '../axios'
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -22,6 +23,7 @@ export default function App() {
   const navigate = useNavigate();
   const redirectToLogin = () => {navigate('/')}
   const redirectToArticles = () => {navigate('/articles')}
+  const token = localStorage.getItem("token");
 
   const logout = () => {
     // ✨ implement
@@ -69,7 +71,6 @@ export default function App() {
     // Don't forget to turn off the spinner!
     setMessage('');
     setSpinnerOn(true);
-    const token = localStorage.getItem("token");
     axios.get(articlesUrl, { headers: { authorization: token }
     })
       .then(res => {
@@ -89,7 +90,24 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
-  }
+    setMessage('')
+    setSpinnerOn(true)
+    axiosWithAuth()
+      .post(articlesUrl, {
+        title: article.title,
+        text: article.text,
+        topic: article.topic
+      })
+      .then(res => {
+        setMessage(res.data.message)
+        debugger
+        setSpinnerOn(false)
+        getArticles()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
@@ -116,7 +134,7 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm />
+              <ArticleForm postArticle={postArticle}/>
               <Articles getArticles={getArticles} articles={articles} />
             </>
           } />
