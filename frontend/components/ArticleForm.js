@@ -36,18 +36,15 @@ export default function ArticleForm(props) {
     evt.preventDefault()
     const trimTitle = values.title.trim()
     const trimText = values.text.trim()
-
-    if(currentArticleId) {
-      if(trimTitle.length >= 1 && trimText.length >= 1 && values.topic) { 
-        updateArticle(currentArticleId, values)
-        setCurrentArticleId()
-        setValues(initialFormValues)
-      } else {
-        console.log(`bad length`)
-      }
-    } else {
+    if(!currentArticleId) {
       postArticle(values)
       setValues(initialFormValues)
+    } else if (trimTitle.length >= 1 && trimText.length >= 1 && values.topic) {
+      updateArticle(currentArticleId, values)
+      setCurrentArticleId()
+      setValues(initialFormValues)
+    } else {
+      console.log(`bad length`)
     }
   }
 
