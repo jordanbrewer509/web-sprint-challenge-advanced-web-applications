@@ -9,7 +9,6 @@ export default function ArticleForm(props) {
   const { articles, postArticle, updateArticle, setCurrentArticleId, currentArticleId } = props
 
   useEffect(() => {
-    console.log('Updated article use efefctacs')
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
