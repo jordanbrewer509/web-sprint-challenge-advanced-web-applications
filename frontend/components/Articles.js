@@ -9,8 +9,7 @@ export default function Articles(props) {
     getArticles, 
     updateArticle, 
     deleteArticle, 
-    setCurrentArticleId,
-    setMessage
+    setCurrentArticleId
   } = props
 
   // ✨ implement conditional logic: if no token exists

@@ -84,7 +84,7 @@ export default function App() {
       })
   }
 
-  const articleUpdate = () => {
+  async function articleUpdate() {
     setSpinnerOn(true)
     axiosWithAuth()
       .get(articlesUrl)
