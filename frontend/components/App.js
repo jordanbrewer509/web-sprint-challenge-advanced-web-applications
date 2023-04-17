@@ -109,10 +109,9 @@ export default function App() {
         topic: article.topic
       })
       .then(res => {
-        console.log(res.data)
+        articleUpdate()
         setMessage(res.data.message)
         setSpinnerOn(false)
-        articleUpdate()
       })
       .catch(err => {
         console.log(err)
