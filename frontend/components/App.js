@@ -85,10 +85,12 @@ export default function App() {
   }
 
   const articleUpdate = () => {
+    setSpinnerOn(true)
     axiosWithAuth()
       .get(articlesUrl)
         .then(res => {
           setArticles(res.data.articles)
+          setSpinnerOn(false)
         })
         .catch(err => {
           console.log(err)
