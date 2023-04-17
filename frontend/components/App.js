@@ -73,6 +73,7 @@ export default function App() {
     axios.get(articlesUrl, { headers: { authorization: token }
     })
       .then(res => {
+        console.log("Get TWO!!!")
         setSpinnerOn(false)
         setArticles(res.data.articles)
         setMessage(res.data.message)
@@ -85,6 +86,7 @@ export default function App() {
   }
 
   async function articleUpdate() {
+    console.log("Get ONE!!!")
     setSpinnerOn(true)
     axiosWithAuth()
       .get(articlesUrl)

@@ -9,6 +9,7 @@ export default function ArticleForm(props) {
   const { articles, postArticle, updateArticle, setCurrentArticleId, currentArticleId } = props
 
   useEffect(() => {
+    console.log('Updated article use efefctacs')
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
@@ -21,7 +22,7 @@ export default function ArticleForm(props) {
       })
       : 
       setValues(initialFormValues)
-  }, [updateArticle])
+  }, [currentArticleId])
 
   const onChange = evt => {
     const { id, value } = evt.target
@@ -37,6 +38,7 @@ export default function ArticleForm(props) {
     const trimTitle = values.title.trim()
     const trimText = values.text.trim()
     if(!currentArticleId) {
+      console.log(values)
       postArticle(values)
       setValues(initialFormValues)
     } else if (trimTitle.length >= 1 && trimText.length >= 1 && values.topic) {
