@@ -100,7 +100,6 @@ export default function App() {
       })
       .then(res => {
         setMessage(res.data.message)
-        debugger
         setSpinnerOn(false)
         getArticles()
       })

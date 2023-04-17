@@ -34,9 +34,8 @@ export default function ArticleForm(props) {
     // Make sure the inputs have some values
     const trimTitle = values.title.trim()
     const trimText = values.text.trim()
-    const trimTopic = values.topic.trim()
 
-    if (trimTitle.length >= 1 && trimText >= 1 && trimTopic >= 1) {
+    if (trimTitle.length >= 1 && trimText.length >= 1 && values.topic) {
       return false
     } else {
       return true
