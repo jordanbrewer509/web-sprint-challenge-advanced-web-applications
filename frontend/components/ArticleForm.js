@@ -6,14 +6,22 @@ const initialFormValues = { title: '', text: '', topic: '' }
 export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
-  const { postArticle } = props
+  const { articles, postArticle, updateArticle, setCurrentArticleId, currentArticleId } = props
 
   useEffect(() => {
     // ✨ implement
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
     // values of the form. If it's not, we should reset the form back to initial values.
-  })
+    currentArticleId ? 
+      setValues({
+        title: articles[currentArticleId - 1].title,
+        text: articles[currentArticleId - 1].text,
+        topic: articles[currentArticleId - 1].topic
+      })
+      : 
+      setValues(initialFormValues)
+  }, [updateArticle])
 
   const onChange = evt => {
     const { id, value } = evt.target
@@ -21,12 +29,26 @@ export default function ArticleForm(props) {
   }
 
   const onSubmit = evt => {
-    evt.preventDefault()
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
-    postArticle(values)
-    setValues(initialFormValues)
+    
+    evt.preventDefault()
+    const trimTitle = values.title.trim()
+    const trimText = values.text.trim()
+
+    if(currentArticleId) {
+      if(trimTitle.length >= 1 && trimText.length >= 1 && values.topic) { 
+        updateArticle(currentArticleId, values)
+        setCurrentArticleId()
+        setValues(initialFormValues)
+      } else {
+        console.log(`bad length`)
+      }
+    } else {
+      postArticle(values)
+      setValues(initialFormValues)
+    }
   }
 
   const isDisabled = () => {

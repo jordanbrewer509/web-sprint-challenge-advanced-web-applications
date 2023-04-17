@@ -46,7 +46,6 @@ export default function App() {
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
     setSpinnerOn(true);
-    setMessage('');
     const credentials = {username: username, password: password}
     axios.post(loginUrl, credentials)
       .then(res => {
@@ -85,6 +84,17 @@ export default function App() {
       })
   }
 
+  const articleUpdate = () => {
+    axiosWithAuth()
+      .get(articlesUrl)
+        .then(res => {
+          setArticles(res.data.articles)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+  }
+
   const postArticle = article => {
     // ✨ implement
     // The flow is very similar to the `getArticles` function.
@@ -99,25 +109,55 @@ export default function App() {
         topic: article.topic
       })
       .then(res => {
+        console.log(res.data)
         setMessage(res.data.message)
         setSpinnerOn(false)
-        getArticles()
+        articleUpdate()
       })
       .catch(err => {
         console.log(err)
       })
     }
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = (article_id, article) => {
     // ✨ implement
     // You got this!
-    console.log(article_id)
-    console.log(article)
+    setMessage('')
+    setSpinnerOn(true)
+    setCurrentArticleId(article_id)
+    axiosWithAuth()
+      .put(articlesUrl + `/` + article_id, {
+        title: article.title,
+        text: article.text,
+        topic: article.topic
+      })
+      .then(res => {
+        setSpinnerOn(false)
+        setMessage(res.data.message)
+        articleUpdate()
+      })
+      .catch(err => {
+        setSpinnerOn(false)
+        console.log(err)
+      })
+    
   }
 
   const deleteArticle = article_id => {
     // ✨ implement
-    console.log(article_id)
+    setMessage('')
+    setSpinnerOn(true)
+    axiosWithAuth()
+      .delete(articlesUrl + `/` + article_id)
+      .then(res => {
+        setSpinnerOn(false)
+        setMessage(res.data.message)
+        articleUpdate()
+      })
+      .catch(err => {
+        setSpinnerOn(false)
+        console.log(err)
+      })
   }
 
   return (
@@ -136,12 +176,20 @@ export default function App() {
           <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
             <>
-              <ArticleForm postArticle={postArticle}/>
+              <ArticleForm 
+                articles={articles}
+                postArticle={postArticle}
+                updateArticle={updateArticle}
+                currentArticleId={currentArticleId}
+                setCurrentArticleId={setCurrentArticleId}
+              />
               <Articles 
+                setMessage={setMessage}
                 articles={articles} 
                 getArticles={getArticles} 
                 updateArticle={updateArticle} 
                 deleteArticle={deleteArticle}
+                setCurrentArticleId={setCurrentArticleId}
               />
             </>
           } />
